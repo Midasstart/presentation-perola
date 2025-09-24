@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Pérola IA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #12100e;
+            --accent-color: #D4AF37;
+            --accent-glow: rgba(212, 175, 55, 0.7);
+            --text-color: #f5f5f5;
+            --text-muted-color: #b0a695;
+            --border-color: rgba(212, 175, 55, 0.1);
+            --border-hover-color: rgba(212, 175, 55, 0.4);
+            --card-bg-color: rgba(255, 255, 255, 0.02);
+            --shooting-star-count: 1;
+        }
+        
+        @property --p {
+          syntax: '<angle>';
+          inherits: false;
+          initial-value: 0deg;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; cursor: none; }
+        body { font-family: 'Manrope', sans-serif; background-color: var(--bg-color); color: var(--text-color); position: relative; }
+        
+        /* ===== EFEITOS DE FUNDO E GERAIS ===== */
+        .particles-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .particle { position: absolute; background-color: var(--accent-color); border-radius: 50%; opacity: 0; animation: fly-up linear infinite; filter: blur(1px); bottom: 0; }
+        @keyframes fly-up { 0%{transform:translateY(0);opacity:0} 10%,90%{opacity:1} 100%{transform:translateY(-120vh);opacity:0} }
+        .particle:nth-child(1){width:2px;height:2px;left:10%;animation-duration:9s;animation-delay:-1s}.particle:nth-child(2){width:1px;height:1px;left:20%;animation-duration:12s;animation-delay:-4s}.particle:nth-child(3){width:3px;height:3px;left:30%;animation-duration:7s;animation-delay:-3s}.particle:nth-child(4){width:1px;height:1px;left:40%;animation-duration:15s;animation-delay:-7s}.particle:nth-child(5){width:2px;height:2px;left:50%;animation-duration:8s;animation-delay:-2s}.particle:nth-child(6){width:1px;height:1px;left:60%;animation-duration:11s;animation-delay:-5s}.particle:nth-child(7){width:3px;height:3px;left:70%;animation-duration:9s;animation-delay:-6s}.particle:nth-child(8){width:1px;height:1px;left:80%;animation-duration:13s;animation-delay:-1s}.particle:nth-child(9){width:2px;height:2px;left:90%;animation-duration:10s;animation-delay:-8s}.particle:nth-child(10){width:3px;height:3px;left:5%;animation-duration:14s;animation-delay:-10s}
+        
+        .meteors-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: hidden; }
+        .meteor { position: absolute; width: 3px; height: 3px; background: var(--accent-color); border-radius: 50%; opacity: 0; }
+        .meteor::before { content: ''; position: absolute; top: -30px; left: 50%; width: 2px; height: 30px; background: linear-gradient(180deg, transparent, var(--accent-color)); transform: translateX(-50%); opacity: 0.8; }
+        .meteor::after { content: ''; position: absolute; top: -60px; left: 50%; width: 1px; height: 60px; background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.4)); transform: translateX(-50%); opacity: 0.5; }
+        
+        @keyframes meteor-fall { 0% { transform: translateY(-100px); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(calc(100vh + 100px)); opacity: 0; } }
+        .meteor:nth-child(1) { left: 10%; animation: meteor-fall 2s linear infinite; animation-delay: 0s; } .meteor:nth-child(2) { left: 20%; animation: meteor-fall 3s linear infinite; animation-delay: -1s; } .meteor:nth-child(3) { left: 30%; animation: meteor-fall 2.5s linear infinite; animation-delay: -0.5s; } .meteor:nth-child(4) { left: 40%; animation: meteor-fall 3.5s linear infinite; animation-delay: -2s; } .meteor:nth-child(5) { left: 50%; animation: meteor-fall 2.2s linear infinite; animation-delay: -0.3s; } .meteor:nth-child(6) { left: 60%; animation: meteor-fall 3.2s linear infinite; animation-delay: -1.5s; } .meteor:nth-child(7) { left: 70%; animation: meteor-fall 2.8s linear infinite; animation-delay: -0.8s; } .meteor:nth-child(8) { left: 80%; animation: meteor-fall 3.8s linear infinite; animation-delay: -1.2s; }
+
+        .shooting-star { position: absolute; top: -50px; right: 75px; width: 4px; height: 4px; background: var(--accent-color); border-radius: 50%; opacity: 0; z-index: 5; }
+        .shooting-star::before { content: ''; position: absolute; top: 50%; right: 1px; transform: translateY(-50%); width: 150px; height: 2px; background: linear-gradient(to left, var(--accent-color), transparent); border-radius: 2px; }
+        .shooting-star::after { content: ''; position: absolute; top: 50%; right: 1px; transform: translateY(-50%); width: 300px; height: 1px; background: linear-gradient(to left, rgba(212, 175, 55, 0.4), transparent); border-radius: 1px; }
+        
+        @keyframes shooting-star-fly { 0% { transform: translateX(0) translateY(0) rotate(135deg); opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { transform: translateX(calc(-100vw - 400px)) translateY(calc(100vh + 100px)) rotate(135deg); opacity: 0; } }
+        .slide.final-slide.active .shooting-star { animation: shooting-star-fly 1.5s ease-in 0.5s; animation-iteration-count: var(--shooting-star-count); }
+        
+        .grid-overlay { position: fixed; top: -50px; left: -50px; right: -50px; bottom: -50px; z-index: 2; background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(to right, var(--border-color) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; transition: transform 0.1s linear; }
+        .spotlight { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; background: radial-gradient(circle, transparent 120px, rgba(18, 16, 14, 0.85) 280px); }
+
+        /* ===== ESTRUTURA E LAYOUTS ===== */
+        .presentation-container { position: relative; z-index: 4; width: 100vw; height: 100vh; overflow: hidden; }
+        .slider-track { display: flex; height: 100%; transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1); }
+        .slide { flex: 0 0 100%; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; padding: 2rem; }
+        .slide-content { width: 100%; max-width: 1100px; text-align: center; position: relative; }
+
+        .slide-bg-number { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(8rem, 25vw, 18rem); font-weight: 800; color: rgba(255, 255, 255, 0.03); z-index: -1; line-height: 1; user-select: none; }
+
+        .data-card-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; align-items: center; padding: 3rem; }
+        .simple-card-layout { padding: 3rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        
+        .data-card-layout .slide-left { position: relative; text-align: right; border-right: 2px solid var(--border-color); padding-right: 2rem; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; height: 100%; }
+        .data-card-layout .slide-left .slide-bg-number { left: auto; right: 2rem; transform: translate(0, -50%); }
+        
+        .slide-title { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; line-height: 1.2; margin-bottom: 1rem;}
+        .slide-subtitle { font-size: 1.2rem; color: var(--text-muted-color); max-width: 700px; margin: 0 auto 2rem auto; line-height: 1.6; }
+
+        .slide-icon { font-size: 4rem; color: var(--accent-color); margin-bottom: 1.5rem; transition: transform 0.3s ease, text-shadow 0.3s ease; z-index: 1; }
+        .data-card-layout:hover .slide-icon, .simple-card-layout:hover .slide-icon { transform: scale(1.1); text-shadow: 0 0 15px var(--accent-color); }
+        .slide-right { text-align: left; }
+        .slide-right ul { list-style: none; padding: 0; } .slide-right li { margin-bottom: 1.2rem; color: var(--text-muted-color); font-size: 1.1rem; line-height: 1.5; padding-left: 2rem; position: relative; }
+        .slide-right li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--accent-color); position: absolute; left: 0; top: 5px; }
+
+        /* ===== COMPONENTES ===== */
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0; width: 100%; }
+        .stat-card { background: var(--card-bg-color); padding: 1.5rem; border-radius: 10px; border: 1px solid var(--border-color); } .stat-label { font-size: 1rem; color: var(--text-muted-color); margin-bottom: 0.5rem; } .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--accent-color); line-height: 1; }
+        .integration-card { background: var(--card-bg-color); padding: 2rem 1.5rem; border-radius: 10px; border: 1px solid var(--border-color); font-size: 1.5rem; font-weight: 700; color: var(--text-color); }
+        
+        .conclusion-text { max-width: 800px; margin: 1rem auto; text-align: left; font-size: 1.1rem; line-height: 1.7; color: var(--text-muted-color); } .conclusion-text strong { color: var(--accent-color); } .footer-credit { margin-top: 3rem; font-size: 1rem; color: var(--text-muted-color); }
+
+        /* ===== ESTILOS PARA SLIDES DE VENDA ===== */
+        .investment-breakdown { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-top: 2rem; width: 100%; }
+        .investment-card { background: var(--card-bg-color); padding: 1.5rem; border-radius: 10px; border: 1px solid var(--border-color); text-align: center; flex-grow: 1; min-width: 220px; transition: all 0.3s ease; }
+        .investment-label { color: var(--text-muted-color); font-size: 1rem; margin-bottom: 0.75rem; }
+        .investment-value { font-size: 2.2rem; font-weight: 800; color: var(--text-color); }
+        .investment-card.subsidy .investment-value { color: #50C878; }
+        .investment-card.final-cost { border-color: var(--accent-color); box-shadow: 0 0 20px var(--accent-glow); transform: scale(1.05); }
+        .investment-card.final-cost .investment-value { color: var(--accent-color); }
+
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; width: 100%; max-width: 900px; }
+        .pricing-tier { background: var(--card-bg-color); padding: 2rem 1.5rem; border-radius: 10px; border: 1px solid var(--border-color); transition: all 0.3s ease; }
+        .pricing-tier:hover { transform: translateY(-5px); border-color: var(--border-hover-color); }
+        .pricing-tier h3 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 1rem; }
+        .pricing-tier p { font-size: 2.5rem; font-weight: 800; color: var(--accent-color); }
+        .pricing-tier p span { font-size: 1rem; font-weight: 400; color: var(--text-muted-color); margin-left: 0.5rem; }
+
+        /* ===== ANIMAÇÕES E NAVEGAÇÃO ===== */
+        .animated-item { opacity: 0; transition: all 0.5s ease-out; transform: translateY(20px); } .slide.active .animated-item { opacity: 1; transform: translateY(0); } .slide.active .item-2 { transition-delay: 0.1s; } .slide.active .item-3 { transition-delay: 0.2s; } .slide.active .item-4 { transition-delay: 0.3s; } .slide.active .item-5 { transition-delay: 0.4s; } .slide.active .item-6 { transition-delay: 0.5s; } .slide.active .item-7 { transition-delay: 0.6s; }
+        
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-color); width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: none; z-index: 10; transition: all 0.3s ease; } .nav-btn:hover { background-color: var(--accent-color); color: var(--bg-color); box-shadow: 0 0 25px var(--accent-glow); } .nav-btn.prev { left: 2rem; } .nav-btn.next { right: 2rem; } .nav-btn.hidden { opacity: 0; pointer-events: none; }
+        
+        .progress-bar-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 100; background-color: var(--border-color); } .progress-bar { width: 0; height: 100%; background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-glow); transition: width 0.6s cubic-bezier(0.76, 0, 0.24, 1); }
+        
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 30px; height: 30px; border: 2px solid var(--accent-color); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, border-width 0.2s; z-index: 9999; } .custom-cursor.hover { width: 50px; height: 50px; border-width: 3px; } .custom-cursor.click { transform: translate(-50%, -50%) scale(0.8); } .cursor-trail { position: fixed; top: 0; left: 0; width: 8px; height: 8px; background: var(--accent-color); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 9998; transition: opacity 0.3s; }
+        
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 10000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s ease; } .loading-screen.hidden { opacity: 0; visibility: hidden; } .loader { width: 50px; height: 50px; border: 5px solid var(--border-color); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 900px) {
+            .slide { padding: 1.5rem; } .data-card-layout { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; } .data-card-layout .slide-left { text-align: center; border-right: none; border-bottom: 2px solid var(--border-color); padding: 0 0 2rem 0; align-items: center; } .data-card-layout .slide-right { text-align: center; } .slide-right li { text-align: left;} .nav-btn.prev { left: 1rem; } .nav-btn.next { right: 1rem; } .custom-cursor, .cursor-trail, .spotlight { display: none; } html, body { cursor: auto; }
+        }
+
+        @media (max-width: 600px) {
+            .slide { padding: 1rem; } .simple-card-layout, .data-card-layout { padding: 1rem; } .slide-icon { font-size: 3rem; } .nav-btn { width: 40px; height: 40px; font-size: 1rem; } .nav-btn.prev { left: 0.5rem; } .nav-btn.next { right: 0.5rem; } .stat-label { font-size: 0.9rem; } .stat-number { font-size: 2rem; } .conclusion-text { font-size: 1rem; line-height: 1.6; } .meteors-bg { display: none; }
+            .pricing-tier p { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="loading-screen"> <div class="loader"></div> </div>
+    <div class="spotlight"></div>
+    <div class="custom-cursor"></div>
+    <div class="cursor-trail"></div><div class="cursor-trail"></div><div class="cursor-trail"></div><div class="cursor-trail"></div><div class="cursor-trail"></div>
+    <div class="progress-bar-container"> <div class="progress-bar"></div> </div>
+    
+    <div class="particles-bg">
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    </div>
+    
+    <div class="meteors-bg">
+        <div class="meteor"></div><div class="meteor"></div><div class="meteor"></div><div class="meteor"></div><div class="meteor"></div><div class="meteor"></div><div class="meteor"></div><div class="meteor"></div>
+    </div>
+    
+    <div class="grid-overlay"></div>
+
+    <div class="presentation-container">
+        <button class="nav-btn prev hidden"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+
+        <div class="slider-track">
+            
+            <!-- SLIDE 1: INTRODUÇÃO -->
+            <section class="slide">
+                <div class="slide-content"><div class="simple-card-layout"><span class="slide-bg-number">01</span><i class="fa-solid fa-gem slide-icon animated-item" style="font-size: 6rem;"></i><h1 class="slide-title animated-item item-2" id="typewriter-title" data-text="Conheça a Pérola"></h1><p class="slide-subtitle animated-item item-3">A Atendente Virtual Inteligente que transforma o atendimento da sua clínica.</p></div></div>
+            </section>
+
+            <!-- SLIDE 2: O QUE ELA É -->
+            <section class="slide">
+                <div class="slide-content"><div class="simple-card-layout"><span class="slide-bg-number">02</span><i class="fa-solid fa-headset slide-icon animated-item"></i><h2 class="slide-title animated-item item-2">Sua Recepcionista IA, Disponível 24/7</h2><p class="slide-subtitle animated-item item-3">Pérola opera diretamente no WhatsApp para atender, agendar e interagir com seus pacientes a qualquer hora do dia, da noite e até de madrugada, garantindo que nenhuma oportunidade seja perdida.</p></div></div>
+            </section>
+
+            <!-- SLIDE 3: GESTÃO DE AGENDAMENTOS -->
+            <section class="slide">
+                <div class="slide-content data-card-layout"><div class="slide-left"><span class="slide-bg-number">03</span><i class="fa-solid fa-calendar-days slide-icon animated-item"></i> <h2 class="slide-title animated-item item-2">Gestão Completa de Agendamentos</h2></div><div class="slide-right"> <ul class="animated-item item-3"><li>Consulta de horários em tempo real, seguindo as regras da clínica.</li><li>Agendamento, remarcação e cancelamento totalmente automatizados.</li><li>Confirmações e lembretes proativos para reduzir drasticamente as faltas.</li><li>Cadastro de novos clientes integrado diretamente ao sistema Trinks.</li></ul></div></div>
+            </section>
+
+            <!-- SLIDE 4: COMUNICAÇÃO INTELIGENTE -->
+            <section class="slide">
+                 <div class="slide-content data-card-layout"><div class="slide-left"><span class="slide-bg-number">04</span><i class="fa-solid fa-comments slide-icon animated-item"></i> <h2 class="slide-title animated-item item-2">Comunicação Humanizada e Multimídia</h2></div><div class="slide-right"><ul class="animated-item item-3"><li>Compreende mensagens de texto, áudios e até imagens enviadas pelos pacientes.</li><li>Responde a perguntas frequentes sobre serviços, preços, localização e horários.</li><li>Processa mensagens fragmentadas e contínuas para uma conversa fluida e natural.</li><li>Identifica a necessidade e transfere para o suporte humano de forma inteligente.</li></ul></div></div>
+            </section>
+
+            <!-- SLIDE 5: FIDELIZAÇÃO E GESTÃO -->
+            <section class="slide">
+                <div class="slide-content data-card-layout"><div class="slide-left"><span class="slide-bg-number">05</span><i class="fa-solid fa-heart slide-icon animated-item"></i> <h2 class="slide-title animated-item item-2">Fidelização e Crescimento Ativo</h2></div><div class="slide-right"><ul class="animated-item item-3"><li>Envia mensagens de aniversário com ofertas especiais para encantar seus clientes.</li><li>Executa campanhas de reativação para trazer de volta clientes inativos.</li><li>Coleta feedback pós-atendimento e incentiva avaliações positivas no Google.</li><li>Gera relatórios diários de performance e envia diretamente para o gestor.</li></ul></div></div>
+            </section>
+            
+            <!-- NOVO SLIDE 6: DASHBOARDS -->
+            <section class="slide">
+                <div class="slide-content">
+                    <div class="simple-card-layout">
+                        <span class="slide-bg-number">06</span>
+                        <i class="fa-solid fa-chart-pie slide-icon animated-item"></i>
+                        <h2 class="slide-title animated-item item-2">Visão Completa com Dashboards</h2>
+                        <p class="slide-subtitle animated-item item-3">Acompanhe cada interação, agendamento e resultado com painéis de controle detalhados, fornecendo insights valiosos para a gestão do seu negócio.</p>
+                        <div class="stats-container">
+                            <div class="integration-card animated-item item-4">Mensagens</div>
+                            <div class="integration-card animated-item item-5">Agendamentos</div>
+                            <div class="integration-card animated-item item-6">Estatísticas API Trinks</div>
+                            <div class="integration-card animated-item item-7">Anúncios <span style="font-size: 0.8em; color: var(--text-muted-color); font-weight: 400;">(Em breve)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: INTEGRAÇÕES -->
+             <section class="slide">
+                <div class="slide-content"><div class="simple-card-layout"><span class="slide-bg-number">07</span><i class="fa-solid fa-puzzle-piece slide-icon animated-item"></i><h2 class="slide-title animated-item item-2">O Cérebro da Operação</h2><p class="slide-subtitle animated-item item-3">Pérola não é um chatbot isolado. Ela se conecta às ferramentas que você já usa para criar um ecossistema de atendimento poderoso e unificado.</p><div class="stats-container"><div class="integration-card animated-item item-4">Trinks</div><div class="integration-card animated-item item-5">API do WhatsApp</div><div class="integration-card animated-item item-6">Google Reviews</div></div></div></div>
+            </section>
+
+            <!-- SLIDE 8: TRANSIÇÃO PARA A PROPOSTA -->
+            <section class="slide">
+                <div class="slide-content"><div class="simple-card-layout"><span class="slide-bg-number">08</span><i class="fa-solid fa-wand-magic-sparkles slide-icon animated-item"></i><h2 class="slide-title animated-item item-2">A Proposta para o Futuro</h2><p class="conclusion-text animated-item item-3" style="text-align: center;">Os resultados falam por si. Agora, veja como é simples iniciar essa jornada de crescimento.</p></div></div>
+            </section>
+
+            <!-- SLIDE 9: INVESTIMENTO INICIAL -->
+            <section class="slide">
+                <div class="slide-content"><div class="simple-card-layout"><span class="slide-bg-number">09</span><i class="fa-solid fa-rocket slide-icon animated-item"></i><h2 class="slide-title animated-item item-2">Investimento de Implementação</h2><div class="investment-breakdown"><div class="investment-card animated-item item-3"><div class="investment-label">Valor Total do Projeto</div><div class="investment-value" style="text-decoration: line-through;">R$ 15.000,00</div></div><div class="investment-card subsidy animated-item item-4"><div class="investment-label">Subsídio Sebrae <i class="fa-solid fa-gift"></i></div><div class="investment-value">- R$ 9.000,00</div></div><div class="investment-card final-cost animated-item item-5"><div class="investment-label">Investimento Final (por loja)</div><div class="investment-value">R$ 6.000,00</div></div></div><p class="animated-item item-6" style="margin-top: 2rem; color: var(--text-muted-color);">Taxa única para implementação, treinamento e lançamento.</p></div></div>
+            </section>
+
+            <!-- SLIDE 10: MENSALIDADE -->
+            <section class="slide">
+                <div class="slide-content"><div class="simple-card-layout"><span class="slide-bg-number">10</span><i class="fa-solid fa-layer-group slide-icon animated-item"></i><h2 class="slide-title animated-item item-2">Mensalidade Flexível</h2><p class="animated-item item-3" style="color: var(--text-muted-color); margin-bottom: 2rem;">Pague apenas pela sua capacidade. Preço por profissional/agenda ativa.</p><div class="pricing-grid"><div class="pricing-tier animated-item item-3"><h3>Até 3 agendas</h3><p>R$ 400<span>/agenda</span></p></div><div class="pricing-tier animated-item item-4"><h3>Até 6 agendas</h3><p>R$ 300<span>/agenda</span></p></div><div class="pricing-tier animated-item item-5"><h3>Até 9 agendas</h3><p>R$ 250<span>/agenda</span></p></div><div class="pricing-tier animated-item item-6"><h3>Até 12 agendas</h3><p>R$ 200<span>/agenda</span></p></div></div></div></div>
+            </section>
+
+            <!-- SLIDE 11: CUSTO DE TOKENS E EVOLUÇÃO -->
+            <section class="slide">
+                <div class="slide-content">
+                    <div class="simple-card-layout">
+                        <span class="slide-bg-number">11</span>
+                        <i class="fa-solid fa-infinity slide-icon animated-item"></i>
+                        <h2 class="slide-title animated-item item-2">Custos Dinâmicos e Evolução Contínua</h2>
+                        <div class="conclusion-text animated-item item-3">
+                            <p>O <strong>custo de tokens</strong>, associado ao volume de mensagens, é uma despesa variável. No entanto, a tendência histórica e de mercado é que este custo <strong>diminua com o tempo</strong>. Isso ocorre por dois motivos principais: nossas <strong>otimizações internas</strong> constantes e a própria evolução do mercado — com a chegada do <strong>GPT-5</strong>, por exemplo, a expectativa é de uma redução nos custos da tecnologia atual.</p>
+                            <h3 style="margin-top: 2rem; color: var(--text-color);">Evolução Constante</h3>
+                            <p>A Pérola não é um produto estático. Ela está em <strong>constante evolução</strong>. Diariamente, nossa equipe coleta feedbacks, realiza ajustes e implementa novas funcionalidades para garantir que você tenha sempre a ferramenta mais eficiente e poderosa à sua disposição.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: FINAL -->
+            <section class="slide final-slide">
+                <div class="slide-content">
+                    <div class="shooting-star"></div>
+                    <div class="simple-card-layout">
+                        <span class="slide-bg-number">12</span>
+                        <i class="fa-solid fa-handshake slide-icon animated-item" style="font-size: 6rem;"></i>
+                        <h2 class="slide-title animated-item item-2">Vamos Crescer Juntos?</h2>
+                        <div class="footer-credit animated-item item-3">Midas Start Marketing Digital LTDA.</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.querySelector('.slider-track');
+            const slides = Array.from(track.children);
+            const nextButton = document.querySelector('.nav-btn.next');
+            const prevButton = document.querySelector('.nav-btn.prev');
+            let slideWidth = slides.length > 0 ? slides[0].getBoundingClientRect().width : 0;
+            let currentIndex = 0;
+
+            const goToSlide = (targetIndex) => {
+                if (targetIndex < 0 || targetIndex >= slides.length || targetIndex === currentIndex) return;
+                track.style.transform = `translateX(-${slideWidth * targetIndex}px)`;
+                if(slides[currentIndex]) slides[currentIndex].classList.remove('active');
+                if(slides[targetIndex]) {
+                    slides[targetIndex].classList.add('active');
+                    animateSlideContent(slides[targetIndex]);
+                }
+                currentIndex = targetIndex;
+                updateNav();
+                updateProgressBar();
+            };
+            
+            const animateSlideContent = (activeSlide) => {
+                // Animate counters if any
+                const counters = activeSlide.querySelectorAll('.stat-number, .roi-display');
+                counters.forEach(counter => animateStat(counter));
+                // Animate progress bars if any
+                const progressBars = activeSlide.querySelectorAll('.progress-bar-fg');
+                progressBars.forEach(bar => { bar.style.width = `${bar.dataset.width}%`; });
+                // Animate pie charts if any
+                const pieChart = activeSlide.querySelector('.pie-chart');
+                if (pieChart) { pieChart.style.animation = 'draw-pie 1.5s ease-out forwards'; }
+                 // Trigger typewriter for the active slide
+                const typewriterEl = activeSlide.querySelector('#typewriter-title');
+                if (typewriterEl) initTypewriter(typewriterEl);
+            };
+
+            const updateNav = () => {
+                prevButton.classList.toggle('hidden', currentIndex === 0);
+                nextButton.classList.toggle('hidden', currentIndex === slides.length - 1);
+            };
+            
+            nextButton.addEventListener('click', () => goToSlide(currentIndex + 1));
+            prevButton.addEventListener('click', () => goToSlide(currentIndex - 1));
+            
+            document.addEventListener('keydown', (event) => {
+                if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+                if (event.key === 'ArrowRight') goToSlide(currentIndex + 1);
+                else if (event.key === 'ArrowLeft') goToSlide(currentIndex - 1);
+            });
+
+            const loadingScreen = document.querySelector('.loading-screen');
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    if (slides.length > 0) {
+                        slides[0].classList.add('active');
+                        animateSlideContent(slides[0]);
+                    }
+                }, 500);
+            });
+
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                const cursor = document.querySelector('.custom-cursor');
+                const trails = document.querySelectorAll('.cursor-trail');
+                const spotlight = document.querySelector('.spotlight');
+                const gridOverlay = document.querySelector('.grid-overlay');
+                const trailPoints = Array.from({ length: trails.length }, () => ({ x: 0, y: 0 }));
+                let mouseX = 0, mouseY = 0;
+                window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+                function renderMouseEffects() {
+                    cursor.style.transform = `translate(${mouseX - cursor.offsetWidth / 2}px, ${mouseY - cursor.offsetHeight / 2}px)`;
+                    spotlight.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, transparent 120px, rgba(18, 16, 14, 0.85) 280px)`;
+                    const parallaxX = (mouseX / window.innerWidth - 0.5) * -50;
+                    const parallaxY = (mouseY / window.innerHeight - 0.5) * -50;
+                    gridOverlay.style.transform = `translate(${parallaxX}px, ${parallaxY}px)`;
+                    let lastX = mouseX; let lastY = mouseY;
+                    for (let i = 0; i < trailPoints.length; i++) {
+                        const currentPoint = trailPoints[i];
+                        const newX = lastX; const newY = lastY;
+                        trails[i].style.transform = `translate(${currentPoint.x - trails[i].offsetWidth/2}px, ${currentPoint.y - trails[i].offsetHeight/2}px)`;
+                        trails[i].style.opacity = (1 - (i + 1) / trailPoints.length) * 0.7;
+                        trailPoints[i] = { x: currentPoint.x + (newX - currentPoint.x) * 0.3, y: currentPoint.y + (newY - currentPoint.y) * 0.3 };
+                        lastX = currentPoint.x; lastY = newY;
+                    }
+                    requestAnimationFrame(renderMouseEffects);
+                }
+                renderMouseEffects();
+                 document.querySelectorAll('button, a, .dot').forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+                });
+                document.addEventListener('mousedown', () => cursor.classList.add('click'));
+                document.addEventListener('mouseup', () => cursor.classList.remove('click'));
+            }
+
+            function initTypewriter(el) {
+                if (!el || el.dataset.typed) return;
+                const text = el.getAttribute('data-text');
+                el.innerHTML = ''; let i = 0;
+                function type() { if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(type, 80); } }
+                type();
+                el.dataset.typed = "true";
+            }
+
+            const progressBar = document.querySelector('.progress-bar');
+            function updateProgressBar() {
+                const progress = slides.length > 1 ? (currentIndex / (slides.length - 1)) * 100 : 0;
+                progressBar.style.width = `${progress}%`;
+            }
+
+            function animateStat(counter) {
+                if (counter.dataset.animated === 'true' && !slides[currentIndex].classList.contains('active')) return;
+                if(counter.dataset.animated === 'true' && slides[currentIndex].classList.contains('active')) return;
+                
+                counter.dataset.animated = 'true';
+                const target = +counter.getAttribute('data-target'); const format = counter.getAttribute('data-format');
+                if (isNaN(target)) return;
+                let startTimestamp = null; const duration = 1500;
+                
+                const step = (timestamp) => {
+                    if (!slides[currentIndex].contains(counter)) {
+                        counter.dataset.animated = 'false';
+                        return;
+                    }
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentValue = progress * target;
+                    if (format === 'currency') { counter.innerText = currentValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); } 
+                    else if (format === 'percent') { counter.innerText = currentValue.toFixed(2).replace('.', ',') + '%'; } 
+                    else { counter.innerText = Math.floor(currentValue).toLocaleString('pt-BR'); }
+                    if (progress < 1) { window.requestAnimationFrame(step); }
+                };
+                window.requestAnimationFrame(step);
+            }
+            slides.forEach(slide => {
+                new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.attributeName === 'class' && !slide.classList.contains('active')) {
+                             slide.querySelectorAll('.stat-number, .roi-display').forEach(c => c.dataset.animated = 'false');
+                        }
+                    });
+                }).observe(slide, { attributes: true });
+            });
+
+            if (slides.length > 0) { updateNav(); updateProgressBar(); }
+             window.addEventListener('resize', () => {
+                if (slides.length > 0) {
+                    slideWidth = slides[0].getBoundingClientRect().width;
+                    track.style.transition = 'none';
+                    track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+                    setTimeout(() => { track.style.transition = 'transform 0.6s cubic-bezier(0.76, 0, 0.24, 1)'; }, 50);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
